@@ -291,7 +291,7 @@ class SpriteSheet {
 	}
 
 	/*
-	 * Auxiliary methods (get's).
+	 * Auxiliary methods (gets and sets).
 	 */
 	public File getFile() { return file }
 

@@ -44,10 +44,10 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	 *  	height.
 	 */
 	Rectangle selectionBox = new Rectangle(0, 0, 0, 0)
-	// Start position on screen for the selection box
-	Point selectionStart = new Point()
-	// Release position on screen for the selection box
-	Point selectionEnd = new Point()
+		// Start position on screen for the selection box
+		Point selectionStart = new Point()
+		// Release position on screen for the selection box
+		Point selectionEnd = new Point()
 
 	public SpritePanel() throws IOException {
 		setBorder(javax.swing.BorderFactory.createTitledBorder("Sprite Sheet"))
@@ -56,9 +56,8 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 		addMouseListener(this)
 		addMouseMotionListener(this)
 
-		spritesheet = new SpriteSheet(new File("img/test.png"))
-		// TODO - Fazer ler de arquivo
-
+		// Default image
+		spritesheet = new SpriteSheet(new File("img/startscreen.jpg"))
 		setPreferredSize(new Dimension(spritesheet.width,spritesheet.height));
 	}
 
@@ -107,9 +106,6 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 
 		// Repaint panel
 		repaint()
-
-		// -- DEBUG --
-		// System.out.println("Start Box at screen   | x: " + selectionStart.x + " y: " + selectionStart.y);
 	}
 
 	/*
@@ -136,39 +132,8 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 		// Set box position x and y, width and height.
 		selectionBox.setBounds(x, y, w, h)
 
-		// Automatically define SpriteClips (blobs) for the selected area
-		/*spritesheet.findClips(selectionBox)
-		 if(spritesheet.getClips() != null) 
-		 {
-		 for(SpriteClip s : spritesheet.getClips()){
-		 System.out.println(s.toString())
-		 }
-		 System.out.println("Sucess define clips.")
-		 }*/
-		// TODO - Fazer para a imagem inteira
-
-		// TODO - Salvar isso no XML
-		/*
-		 spritesheet.findClips(selectionBox)
-		 if(spritesheet.getClips() != null) 
-		 {
-		 print to xml(
-		 "<?xml version=\"1.0\"?>\n" + 
-		 "<spritesheet>\n")
-		 for(SpriteClip s : spritesheet.getClips()){
-		 print to xml s.toString()
-		 }
-		 print to xml("</spritesheet>")
-		 System.out.println("Sucess print clips to Xml.")
-		 }
-		 */
-
 		// Repaint panel
 		repaint()
-
-		// -- DEBUG --
-		// System.out.println("End   Box at screen   | x: " + selectionEnd.x + " y: " + selectionEnd.y);
-		// System.out.println("      Box size 		 | w: " + selectionBox.width + " h: " + selectionBox.height);
 	}
 
 	/*
@@ -200,10 +165,6 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 				g.drawRect( (int) d.x, (int) d.y, (int) d.width, (int) d.height )
 			}
 		}
-
-		// -- DEBUG --
-		// g.drawString("Start Box Here", selectionStart.x, selectionStart.y );
-		// g.drawString("End   Box Here", selectionEnd.x, selectionEnd.y);
 	}
 
 	/* 
@@ -229,15 +190,19 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	 */
 	public void cutEntireSheet()
 	{
-		if(selectionBox != null && spritesheet != null)
+		if(spritesheet != null)
 		{
+			// Clean previous selection box
+			selectionBox = new Rectangle(0, 0, 0, 0)
+			
+			// Find clips for full image
 			spritesheet.findClips(new Rectangle(0, 0, spritesheet.width, spritesheet.height))
 			if(spritesheet.getClips() != null)
 			{
 				for(SpriteClip s : spritesheet.getClips()){
 					System.out.println(s.toString())
 				}
-				System.out.println("Sucess define clips.")
+				System.out.println("Sucess define blobs.")
 			}
 			// Repaint screen
 			repaint();
@@ -256,7 +221,7 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 				for(SpriteClip s : spritesheet.getClips()){
 					System.out.println(s.toString())
 				}
-				System.out.println("Sucess define clips.")
+				System.out.println("Sucess define blobs.")
 			}
 			// Repaint screen
 			repaint();
