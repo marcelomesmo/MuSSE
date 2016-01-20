@@ -12,13 +12,17 @@ connected-component labeling system.
  Groovy adaptation.
 
  * JAR File at:  
-
+Dropbox: https://www.dropbox.com/home/ifrn-marcelo/projetos/musse
+Direct Link: https://www.dropbox.com/s/agvlzsptj39l8ox/MuSSE.jar?dl=0  
   
  * HOW TO:  
  	1. Cut Selection (CTRL+S)  
  	2. Add Selection to Xml (CTRL+A) as a new set of Sprites (Animation)  
  	3. Export Xml (CTRL+X)  
  	4. Read Xml using parser  
+  
+ * XML format:
+ ![alt tag](https://raw.github.com/marcelomesmo/MuSSE/blob/master/xml-example.png)  
   
  * TODO LIST:  
  	a) Make a editable list of saved animations.  
