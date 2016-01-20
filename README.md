@@ -6,10 +6,10 @@ connected-component labeling system.
 
  * More at:  
  http://www.sbgames.org/sbgames2015/anaispdf/computacao-full/147508.pdf
+  
+Welcome to MuSSE - Multi-sized Sprite Sheet meta-data Exporter.
 
- Welcome to MuSSE - Multi-sized Sprite Sheet meta-data Exporter.
-
- Groovy adaptation.
+Groovy adaptation.
 
  * JAR File at:  
 Dropbox: https://www.dropbox.com/home/ifrn-marcelo/projetos/musse  
