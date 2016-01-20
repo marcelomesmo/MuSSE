@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 
-import javax.imageio.ImageIO
+import javax.swing.ImageIcon
 import javax.swing.JFileChooser
 import javax.swing.JFormattedTextField
 import javax.swing.JFrame
@@ -24,32 +24,6 @@ import javax.swing.KeyStroke
 import javax.swing.SpinnerNumberModel
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.text.NumberFormatter
-
-
-/*
- * TODO List -
- * 
- * 2. Salvar XML.
- * 
- * 3. Criar tela para editar XML (?).
- * 
- * 4. Separar SpriteSheet de BlobDetection.
- * 
- * 6. Criar jar.
- * 
- * 7. Add animation (sprite selection) to Xml.
- * <animation name="label"> ... <>
- * 
- * aadicionar no github:
- * HOW TO:
- * - Cut selection
- * - Add selection to Xml
- * - Export xml
- * - Read xml using parser
- * 
- * TODO LIST:
- * - Edit xml to change names
- */
 
 /*
  * "MuSSE is a tool developed to extract XML data from sprite sheet images with non-uniform – multi-sized – sprites.
@@ -82,13 +56,15 @@ class MuSSE extends JFrame {
 			public void run() {
 				MuSSE app = new MuSSE();
 				try {
-					//app.setIconImage(new ImageIcon(getClass().getResource("img/icon.png")).getImage());
-					app.setIconImage(ImageIO.read(new File("img/icon.png")));
+					// This is a fix to properly load resource image inside jar
+					app.setIconImage(new ImageIcon(this.getClass().getResource("/img/icon.png")).getImage());
+					//app.setIconImage(ImageIO.read(new File("img/icon.png")));
 					
 					final JFileChooser fc = new JFileChooser();
-					FileNameExtensionFilter filter = new FileNameExtensionFilter("Only Image Files", "jpg", "png", "gif", "bmp");
-					fc.setFileFilter(filter);
-					
+					FileNameExtensionFilter openFilter = new FileNameExtensionFilter("Only Image Files", "jpg", "png", "gif", "bmp");
+					FileNameExtensionFilter saveFilter = new FileNameExtensionFilter("Xml Files", "xml");
+					String currentPath;		// Remember last path used at open or save
+
 					SpritePanel panel = new SpritePanel();
 						JScrollPane scrollPane = new JScrollPane(panel);
 						scrollPane.setViewportView(panel);
@@ -108,6 +84,13 @@ class MuSSE extends JFrame {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								System.out.println("Button pressed");
+
+								// Sets FileChooser Filter to Open file
+								fc.setFileFilter(openFilter);
+
+								// Gets last used path
+								if (currentPath != null) fc.setCurrentDirectory(new File(currentPath));
+								
 								int returnVal = fc.showOpenDialog(app);
 						
 								if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -118,6 +101,8 @@ class MuSSE extends JFrame {
 									// Updates scrollPane to adjust to new SpriteSheet
 									scrollPane.setViewportView(panel);
 									
+									// Saves path to be used later
+									currentPath = fc.getSelectedFile().getPath();
 									//This is where a real application would open the file.
 									System.out.println("Opening: " + file.getName() + "." + "\n");
 								} else {
@@ -128,7 +113,64 @@ class MuSSE extends JFrame {
 					fileMenu.add(openMenuItem);
 
 					JMenuItem saveMenuItem = new JMenuItem("Export Selection as XML");
+					saveMenuItem.setMnemonic(KeyEvent.VK_X);
+					saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+							KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+					saveMenuItem.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							System.out.println("Button pressed");
+							
+							String s = panel.getXML()
+
+							//If a string was returned, say so.
+							if ((s != null) && (s.length() > 0)) {
+								System.out.println("XML created.\n");
+								
+								// Sets FileChooser Filter to Save file
+								fc.setFileFilter(saveFilter);
+								
+								// Gets last used path
+								if (currentPath != null) fc.setCurrentDirectory(new File(currentPath));
+								
+								// Opens FILECHOOSER save
+								int returnVal = fc.showSaveDialog(app);
+
+								if (returnVal == JFileChooser.APPROVE_OPTION) {
+									File file = fc.getSelectedFile();
+								
+									// Forces .xml file type
+									if(!file.getAbsolutePath().endsWith(".xml") ) { file = new File(file.getAbsolutePath() + ".xml"); }
+
+									try {
+										// Creates a new Writer
+										FileWriter fw = new FileWriter(file);
+										
+										// Write xml to file
+										fw.write( panel.getXML() );
+										
+										// Close Writer
+										fw.close();
+									} catch (Exception ex) {
+										ex.printStackTrace();
+									}
+									
+									// Saves path to be used later
+									currentPath = fc.getSelectedFile().getPath();
+									//This is where a real application would save the file.
+									System.out.println("Saving: " + file.getName() + "." + "\n");
+								} else {
+									System.out.println("Save command cancelled by user.\n");
+								}
+
+								return;
+							}
+							//If you're here, the return value was null/empty.
+							System.out.println("XML unsucefully created.");
+						}
+					});
 					fileMenu.add(saveMenuItem);
+					
 					fileMenu.addSeparator();
 
 					JMenuItem exitMenuItem = new JMenuItem("Exit");
@@ -143,6 +185,7 @@ class MuSSE extends JFrame {
 
 
 					JMenu actionMenu = new JMenu("Actions");
+					actionMenu.setMnemonic(KeyEvent.VK_C);
 					
 					// Cut Selection Button
 					JMenuItem cutSelectionItem = new JMenuItem("Cut Selection");
@@ -171,8 +214,10 @@ class MuSSE extends JFrame {
 							}
 						});
 					actionMenu.add(cutEntireItem);
-
-					JMenuItem changeThItem = new JMenuItem("Sprite size");
+					
+					actionMenu.addSeparator();
+					
+					JMenuItem changeThItem = new JMenuItem("Sensibility (threshold)");
 						changeThItem.setMnemonic(KeyEvent.VK_T);
 						changeThItem.setAccelerator(KeyStroke.getKeyStroke(
 								KeyEvent.VK_T, ActionEvent.CTRL_MASK));
@@ -181,7 +226,7 @@ class MuSSE extends JFrame {
 						JLabel thresholdLabel = new JLabel("Threshold");
 
 						JSpinner threshold = new JSpinner();
-							threshold.setModel(new SpinnerNumberModel(1,1,99,1));
+							threshold.setModel(new SpinnerNumberModel(8,1,99,1));
 							threshold.setEditor(new JSpinner.NumberEditor(threshold,"##"));
 							JFormattedTextField txt = ((JSpinner.NumberEditor) threshold.getEditor()).getTextField();
 							((NumberFormatter) txt.getFormatter()).setAllowsInvalid(false);
@@ -227,7 +272,8 @@ class MuSSE extends JFrame {
 								if ((s != null) && (s.length() > 0)) {
 									System.out.println("Animation added " + s + " !");
 									
-									// Add Selection to XML as animation
+									// Add Selection of Sprites (Blobs) to XML as new Animation
+									panel.addAnimationToXML(s)
 									
 									return;
 								}

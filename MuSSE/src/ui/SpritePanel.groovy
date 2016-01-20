@@ -11,8 +11,10 @@ import java.awt.event.MouseMotionListener
 
 import javax.swing.JPanel
 
-import spritesheet.SpriteClip
 import spritesheet.SpriteSheet
+import xml.XMLExporter
+import blobdetection.Blob
+import blobdetection.BlobDetection
 
 /*
  * Display for SpriteSheet images using JPanel inheritance.
@@ -35,6 +37,16 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	 *  Load SpriteSheet image
 	 */
 	SpriteSheet spritesheet
+	
+	/*
+	 * XMLExporter to create XML
+	 */
+	XMLExporter xml
+	
+	/*
+	 * 	Load Blob detection algorithm
+	 */
+	BlobDetection blobDetection
 
 	/*
 	 *  Selection box rectangle with:
@@ -50,15 +62,22 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 		Point selectionEnd = new Point()
 
 	public SpritePanel() throws IOException {
-		setBorder(javax.swing.BorderFactory.createTitledBorder("Sprite Sheet"))
+		//setBorder(javax.swing.BorderFactory.createTitledBorder("Sprite Sheet"))
 		setSize(800, 600)
 		//setPreferredSize(new Dimension(800, 600))
 		addMouseListener(this)
 		addMouseMotionListener(this)
 
 		// Default image
-		spritesheet = new SpriteSheet(new File("img/startscreen.jpg"))
-		setPreferredSize(new Dimension(spritesheet.width,spritesheet.height));
+		spritesheet = new SpriteSheet("/img/startscreen.jpg")
+		//spritesheet = new SpriteSheet(new File("img/startscreen.jpg"))
+		setPreferredSize(new Dimension(spritesheet.width,spritesheet.height))
+		
+		// Default blob detection algorithm
+		blobDetection = new BlobDetection()
+		
+		// Default XMLExporter
+		xml = new XMLExporter()
 	}
 
 	/*
@@ -102,7 +121,7 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 		selectionStart.setLocation(e.getX(), e.getY())
 
 		// Clean SpriteSheet's previous blobs for new selection
-		spritesheet.clean()
+		blobDetection.clean()
 
 		// Repaint panel
 		repaint()
@@ -158,9 +177,9 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 		g.drawRect((int) selectionBox.x, (int) selectionBox.y, (int) selectionBox.width, (int) selectionBox.height)
 
 		// Draw SpriteClips (blobs) on Panel, if any
-		if(spritesheet.getClips() != null)
+		if(blobDetection.getClips() != null)
 		{
-			for(SpriteClip s : spritesheet.getClips()){
+			for(Blob s : blobDetection.getClips()){
 				Rectangle d = s.getBoundingBox()
 				g.drawRect( (int) d.x, (int) d.y, (int) d.width, (int) d.height )
 			}
@@ -172,8 +191,11 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	 */
 	public void loadSpriteSheet(File f)
 	{
-		// Cleans previous SpriteSheet, if any
-		if(spritesheet != null) spritesheet.clean()
+		// Cleans previous blobs, if any
+		if(blobDetection != null) blobDetection.clean()
+		
+		// Cleans previous XML, if any
+		if(xml != null) xml.clean()
 
 		// Loads new SpriteSheet from file
 		spritesheet = new SpriteSheet(f)
@@ -196,10 +218,10 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 			selectionBox = new Rectangle(0, 0, 0, 0)
 			
 			// Find clips for full image
-			spritesheet.findClips(new Rectangle(0, 0, spritesheet.width, spritesheet.height))
-			if(spritesheet.getClips() != null)
+			blobDetection.findClips(spritesheet, new Rectangle(0, 0, spritesheet.width, spritesheet.height))
+			if(blobDetection.getClips() != null)
 			{
-				for(SpriteClip s : spritesheet.getClips()){
+				for(Blob s : blobDetection.getClips()){
 					System.out.println(s.toString())
 				}
 				System.out.println("Sucess define blobs.")
@@ -215,10 +237,10 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	{
 		if(selectionBox != null && spritesheet != null)
 		{
-			spritesheet.findClips(selectionBox)
-			if(spritesheet.getClips() != null)
+			blobDetection.findClips(spritesheet, selectionBox)
+			if(blobDetection.getClips() != null)
 			{
-				for(SpriteClip s : spritesheet.getClips()){
+				for(Blob s : blobDetection.getClips()){
 					System.out.println(s.toString())
 				}
 				System.out.println("Sucess define blobs.")
@@ -232,8 +254,39 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	 */
 	public void setThreshold(int t)
 	{
-		if(spritesheet != null) spritesheet.setThreshold(t)
+		if(blobDetection != null) blobDetection.setThreshold(t)
 	}
+	
+	// Adds new Animation to the XML file in XMLExporter
+	
+	/*
+	 * Add Selection as Animation to XML.
+	 */
+	public void addAnimationToXML(String s)
+	{
+		if(blobDetection != null && blobDetection.getClips() != null) {
+			
+			// Start new Animation
+			xml.openAnimation(s)
+			
+			// Add every Sprite (Blob) for that Animation
+			for(Blob b : blobDetection.getClips()){
+				xml.addSprite(b.toXml())
+			}
+			
+			// Closes Animation
+			xml.closeAnimation()
+			
+			System.out.println("Sucess create animation.")
+		}
+	}
+	
+	// Gets the XML file from XMLExporter
+	public String getXML()
+	{
+		return xml.getXML()
+	}
+	
 
 	/*
 	 * UNINPLEMENTED METHODS

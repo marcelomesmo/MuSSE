@@ -1,20 +1,78 @@
 package xml
 
+/*
+ * Class to append data to the XML file.
+ * 
+ * Clean when user changes SpriteSheet.
+ * 
+ */
 class XMLExporter {
+
+	// String for the XML
+	StringBuilder xmlString
 	
-	// TODO - Salvar isso no XML
+	// False case new XML
+	// True case XML already closed
+	def closed
+	
+	public XMLExporter()
+	{
+		closed = false
+		
+		// Init xml
+		xmlString = new StringBuilder(
+			"<?xml version=\"1.0\"?>\n" +
+			"<spritesheet>\n")	
+	}
+	
+	public void clean()
+	{
+		closed = false
+		
+		// Restart xml
+		xmlString = new StringBuilder(
+			"<?xml version=\"1.0\"?>\n" +
+			"<spritesheet>" + "\n")
+	}
+	
 	/*
-	 spritesheet.findClips(selectionBox)
-	 if(spritesheet.getClips() != null)
-	 {
-	 print to xml(
-	 "<?xml version=\"1.0\"?>\n" +
-	 "<spritesheet>\n")
-	 for(SpriteClip s : spritesheet.getClips()){
-	 print to xml s.toString()
-	 }
-	 print to xml("</spritesheet>")
-	 System.out.println("Sucess print clips to Xml.")
-	 }
+	 * Return closed XML to be print in file.
 	 */
+	public String getXML()
+	{ 
+		// Finish xml
+		if(!closed) {
+			xmlString.append("\n" + "</spritesheet>")
+			closed = true
+		}
+		
+		return xmlString.toString()
+	}
+	
+	/* 
+	 * Every time user adds a new animation,
+	 * SpritePanel calls:
+	 * 
+	 * 		openAnimation("name")
+	 * 		add Sprites for that Animation
+	 * 		closeAnimation()
+	 * 
+	 */
+	public void openAnimation(String s)
+	{
+		xmlString.append("	<animation name=\"" + s + "\">\n")
+	}
+	public void closeAnimation(String s)
+	{
+		xmlString.append("	</animation>")
+	}
+	
+	/*
+	 * Adds individual Sprites (Blobs) to the XML
+	 * 
+	 */
+	public void addSprite(String s)
+	{
+		xmlString.append(s)
+	}
 }

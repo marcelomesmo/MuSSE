@@ -11,6 +11,18 @@ connected-component labeling system.
 
  Groovy adaptation.
 
+ * JAR File at:  
+
+  
+ * HOW TO:  
+ 	1. Cut Selection (CTRL+S)  
+ 	2. Add Selection to Xml (CTRL+A) as a new set of Sprites (Animation)  
+ 	3. Export Xml (CTRL+X)  
+ 	4. Read Xml using parser  
+  
+ * TODO LIST:  
+ 	a) Make a editable list of saved animations.  
+  
  * Authors’ contact:  
  https://marcelomesmo.github.io  
  marcelo.barbosa (at) ifrn.edu.br  

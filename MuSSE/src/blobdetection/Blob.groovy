@@ -1,27 +1,38 @@
-package spritesheet
+package blobdetection
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.Point
+import java.awt.Rectangle
+import java.awt.image.BufferedImage
 
 /*
  * Blob.
+ * 
+ * A blob is a region of an image that contains approximately close 
+ * characteristics, such as brightness or color. A blob is defined 
+ * as a region of connected pixels. Blob detection is used to identify 
+ * these regions in images.
+ * 
+ * These blobs are used in MuSSE to save meta-data for Sprites inside a
+ * SpriteSheet, i.e.:
+ * 		offset_x, offset_y (position); and
+ * 		width, height (size).
+ * 
  */
-class SpriteClip {
+class Blob {
 	
-	Set<Point> points = new HashSet()
+	// Blob identification.
 	def name
+	// Blob boundingBox containing position and size.
 	Rectangle boundingBox
+		// Set of Points (pixels) contained in the boundingBox
+		Set<Point> points = new HashSet()
+	// Related SpriteSheet.
 	BufferedImage parentImage
 
 	/*
 	 *  Create SpriteClip (blob) for current SpriteSheet.
 	 */
-	public SpriteClip(BufferedImage _parentImage, int row, int col, String _name) {
+	public Blob(BufferedImage _parentImage, int row, int col, String _name) {
 		parentImage = _parentImage
 		name = _name
 		addLocation(row, col)
@@ -37,13 +48,19 @@ class SpriteClip {
 		}
 	}
 	
-	// Save Image to File
+	// Save Blob Image to File
 		// TODO - Testar.
+		/*
+		 * la em MuSSE fazer um botao "extrair sprites individuais da selecao"
+		 * foreach blob
+		 * b.saveTo()
+		 * 
+		 */
 	public void saveTo(File directory, String format) throws IOException {
 		File outfile = new File(directory, name + "." + format);
 		//ImageIO.write(makeCutout(null, null), format, outfile);
 	}
-	
+
 	/*
 	 * Auxiliary methods (get's).
 	 */
@@ -57,8 +74,8 @@ class SpriteClip {
 		public String getName() { return name }
 	
 	/*
-	 * Return String.
-	 * SpriteClip (blob) name and Bounding Box data (x, y, w, h).
+	 * Return String in Plain txt format.
+	 * Create String description for the Sprite (Blob) with name and Bounding Box data (x, y, w, h) with points (opt).
 	 * 
 	 */
 	public String toString() {
@@ -79,18 +96,18 @@ class SpriteClip {
 		return s.toString()
 	}
 	/*
-	 * Save String in XML format.
-	 * SpriteClip (blob) name and Bounding Box data (x, y, w, h).
+	 * Return String in XML format.
+	 * Create XML description for the Sprite (Blob) with name and Bounding Box data (x, y, w, h).
 	 * 
 	 */
 	public String toXml() {
 		StringBuilder s = new StringBuilder(
-				"<sprite name=\"" + getName() + "\">\n" +
-				"<offset_x>" + boundingBox.x + "</offset_x>\n" +
-			    "<offset_y>" + boundingBox.y + "</offset_y>\n" +
-				"<width>" + boundingBox.width + "</width>\n" +
-				"<height>" + boundingBox.height + "</height>\n" +
-				"</sprite>\n")
+				"		<sprite name=\"" + getName() + "\">\n" +
+				"			<offset_x>" + (int) boundingBox.x + "</offset_x>\n" +
+			    "			<offset_y>" + (int) boundingBox.y + "</offset_y>\n" +
+				"			<width>" + (int) boundingBox.width + "</width>\n" +
+				"			<height>" + (int) boundingBox.height + "</height>\n" +
+				"		</sprite>\n")
 		return s.toString()
 	}
 }
