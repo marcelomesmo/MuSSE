@@ -42,7 +42,7 @@ class XMLExporter {
 	{ 
 		// Finish xml
 		if(!closed) {
-			xmlString.append("\n" + "</spritesheet>")
+			xmlString.append("</spritesheet>")
 			closed = true
 		}
 		
@@ -64,7 +64,7 @@ class XMLExporter {
 	}
 	public void closeAnimation(String s)
 	{
-		xmlString.append("	</animation>")
+		xmlString.append("	</animation>\n")
 	}
 	
 	/*
