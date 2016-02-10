@@ -30,3 +30,5 @@ Direct Link: https://www.dropbox.com/s/agvlzsptj39l8ox/MuSSE.jar?dl=0
  * Authors’ contact:  
  https://marcelomesmo.github.io  
  marcelo.barbosa (at) ifrn.edu.br  
+   
+MuSSE is distributed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).
