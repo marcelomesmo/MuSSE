@@ -23,7 +23,8 @@ Direct Link: https://www.dropbox.com/s/agvlzsptj39l8ox/MuSSE.jar?dl=0
    
  * XML format:  
  ![alt tag](https://raw.githubusercontent.com/marcelomesmo/MuSSE/master/xml-example.png)  
-  
+A Parser in C++ and Java (to read Musse's XML files) is available [here](https://github.com/marcelomesmo/MusseXmlParser).    
+  	
  * TODO LIST:  
  	a) Make a editable list of saved animations.  
   
