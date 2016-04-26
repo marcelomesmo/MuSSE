@@ -13,32 +13,32 @@ class XMLExporter {
 	
 	// False case new XML
 	// True case XML already closed
-	def closed
+	//def closed
 	
 	public XMLExporter()
 	{
-		closed = false
+		//closed = false
 		
 		// Init xml
-		xmlString = new StringBuilder(
+		xmlString = new StringBuilder(/*
 			"<?xml version=\"1.0\"?>\n" +
-			"<spritesheet>\n")	
+			"<spritesheet>\n"*/)	
 	}
-	
+
 	public void clean()
 	{
-		closed = false
+		//closed = false
 		
 		// Restart xml
-		xmlString = new StringBuilder(
+		xmlString = new StringBuilder(/*
 			"<?xml version=\"1.0\"?>\n" +
-			"<spritesheet>" + "\n")
+			"<spritesheet>" + "\n"*/)
 	}
 	
 	/*
 	 * Return closed XML to be print in file.
 	 */
-	public String getXML()
+	/*public String getXML()
 	{ 
 		// Finish xml
 		if(!closed) {
@@ -47,6 +47,32 @@ class XMLExporter {
 		}
 		
 		return xmlString.toString()
+	}*/
+
+	/*
+	 * Return closed XML to be print in file with image path and color key.
+	 */
+	public String getXML(String sheet_name, int width, int height, Color sheet_ck)
+	{ 
+		//if(!closed) {
+			// Open xml
+			StringBuilder finalXml  = new StringBuilder(
+				"<?xml version=\"1.0\"?>\n" +
+				"<spritesheet " 
+				+ "image_name=\"" + sheet_name + "\""
+				+ " width=\"" + width + " height=\"" + height 
+				+ " ck_r=" + sheet_ck.getRed() + " ck_g=" + sheet_ck.getGreen() + " ck_b=" + sheet_ck.getBlue()
+				+ " >\n")
+
+			// Added all Animations 
+			finalXml.append(xmlString.toString())
+			
+			// Finish xml
+			finalXml.append("</spritesheet>")
+			//closed = true
+		//}
+		
+		return finalXml.toString()
 	}
 	
 	/* 

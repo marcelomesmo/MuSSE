@@ -123,6 +123,7 @@ class MuSSE extends JFrame {
 									
 									// Saves path to be used later
 									currentPath = fc.getSelectedFile().getPath();
+
 									//This is where a real application would open the file.
 									System.out.println("Opening: " + file.getName() + "." + "\n");
 								} else {
