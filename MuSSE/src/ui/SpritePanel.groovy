@@ -24,7 +24,7 @@ import blobdetection.BlobDetection
  * The user has two options to apply the Blob detection
  * algorithm on the sprite sheets:
  1. by manually selecting a target area from the sheet; or
- 2. by selecting the option “Cut entire sheet” from the “Actions” menu.
+ 2. by selecting the option â€œCut entire sheetâ€� from the â€œActionsâ€� menu.
  * Option 1 can be achieved if the user clicks and drags 
  * the mouse over the image. That way, the Blob detection
  * algorithm is only applied to that sprite sheet subset 
@@ -286,8 +286,8 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	// Gets the XML file from XMLExporter
 	public String getXML()
 	{
-		return xml.getXML()
-		// return xml.getXML(sheet.getName(), sheet.getWidth(), sheet.getHeight(), sheet.getColorkey())
+		//return xml.getXML()
+		return xml.getXML(spritesheet.getName(), spritesheet.getWidth(), spritesheet.getHeight(), spritesheet.getColorkey())
 	}
 
 	/*

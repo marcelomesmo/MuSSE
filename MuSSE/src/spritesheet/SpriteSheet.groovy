@@ -42,6 +42,7 @@ class SpriteSheet {
 		sheet = ImageIO.read(this.getClass().getResourceAsStream(src))
 		// Pixel color reference for background
 		backgroundValue = sheet.getRGB(0,0)
+		colorkey = new Color(sheet.getRGB(0,0))
 	}
 
 	/*

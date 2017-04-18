@@ -133,7 +133,7 @@ class MuSSE extends JFrame {
 						});
 					fileMenu.add(openMenuItem);
 
-					JMenuItem saveMenuItem = new JMenuItem("Export Selection as XML");
+					JMenuItem saveMenuItem = new JMenuItem("Export as XML");
 					saveMenuItem.setMnemonic(KeyEvent.VK_X);
 					saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 							KeyEvent.VK_X, ActionEvent.CTRL_MASK));

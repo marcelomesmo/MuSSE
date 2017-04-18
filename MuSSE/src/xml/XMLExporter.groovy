@@ -1,5 +1,7 @@
 package xml
 
+import java.awt.Color
+
 /*
  * Class to append data to the XML file.
  * 
@@ -11,66 +13,37 @@ class XMLExporter {
 	// String for the XML
 	StringBuilder xmlString
 	
-	// False case new XML
-	// True case XML already closed
-	//def closed
-	
 	public XMLExporter()
 	{
-		//closed = false
-		
 		// Init xml
-		xmlString = new StringBuilder(/*
-			"<?xml version=\"1.0\"?>\n" +
-			"<spritesheet>\n"*/)	
+		xmlString = new StringBuilder()	
 	}
 
 	public void clean()
 	{
-		//closed = false
-		
 		// Restart xml
-		xmlString = new StringBuilder(/*
-			"<?xml version=\"1.0\"?>\n" +
-			"<spritesheet>" + "\n"*/)
+		xmlString = new StringBuilder()
 	}
-	
-	/*
-	 * Return closed XML to be print in file.
-	 */
-	/*public String getXML()
-	{ 
-		// Finish xml
-		if(!closed) {
-			xmlString.append("</spritesheet>")
-			closed = true
-		}
-		
-		return xmlString.toString()
-	}*/
 
 	/*
 	 * Return closed XML to be print in file with image path and color key.
 	 */
 	public String getXML(String sheet_name, int width, int height, Color sheet_ck)
 	{ 
-		//if(!closed) {
-			// Open xml
-			StringBuilder finalXml  = new StringBuilder(
-				"<?xml version=\"1.0\"?>\n" +
-				"<spritesheet " 
-				+ "image_name=\"" + sheet_name + "\""
-				+ " width=\"" + width + " height=\"" + height 
-				+ " ck_r=" + sheet_ck.getRed() + " ck_g=" + sheet_ck.getGreen() + " ck_b=" + sheet_ck.getBlue()
-				+ " >\n")
+		// Open xml
+		StringBuilder finalXml  = new StringBuilder(
+			"<?xml version=\"1.0\"?>\n" +
+			"<spritesheet " 
+			+ "image_name=\"" + sheet_name + "\""
+			+ " width=\"" + width + "\" height=\"" + height 
+			+ "\" ck_r=\"" + sheet_ck.getRed() + "\" ck_g=\"" + sheet_ck.getGreen() + "\" ck_b=\"" + sheet_ck.getBlue()
+			+ "\" >\n")
 
-			// Added all Animations 
-			finalXml.append(xmlString.toString())
+		// Add all Animations saved in xmlString
+		finalXml.append(xmlString.toString())
 			
-			// Finish xml
-			finalXml.append("</spritesheet>")
-			//closed = true
-		//}
+		// Close xml
+		finalXml.append("</spritesheet>")
 		
 		return finalXml.toString()
 	}
