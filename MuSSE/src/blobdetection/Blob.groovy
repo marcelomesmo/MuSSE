@@ -26,6 +26,8 @@ class Blob {
 	Rectangle boundingBox
 		// Set of Points (pixels) contained in the boundingBox
 		Set<Point> points = new HashSet()
+	// Anchor point for the Blob image
+	Point anchor
 	// Related SpriteSheet.
 	BufferedImage parentImage
 
@@ -43,6 +45,7 @@ class Blob {
 		points.add(p)
 		if (boundingBox == null) {
 			boundingBox = new Rectangle(col, row, 1, 1)
+			anchor = new Point(col,row)
 		} else {
 			boundingBox.add(p)
 		}
@@ -53,9 +56,10 @@ class Blob {
 		/*
 		 * la em MuSSE fazer um botao "extrair sprites individuais da selecao"
 		 * foreach blob
-		 * b.saveTo()
+		 * b.saveTo("blob1", "jpg")
 		 * 
 		 */
+	// NYI.
 	public void saveTo(File directory, String format) throws IOException {
 		File outfile = new File(directory, name + "." + format);
 		//ImageIO.write(makeCutout(null, null), format, outfile);
@@ -64,6 +68,7 @@ class Blob {
 	/*
 	 * Auxiliary methods (get's).
 	 */
+	public Point getAnchorPoint() 	{ return anchor }
 	public Rectangle getBoundingBox() {	return boundingBox }
 		public int getX() 		{ return boundingBox.x }
 		public int getY() 		{ return boundingBox.y }
@@ -84,7 +89,9 @@ class Blob {
 				"Bounding box x: " + boundingBox.x +
 						   ", y: " + boundingBox.y +
 						   ", w: " + boundingBox.width +
-						   ", h: " + boundingBox.height + "\n")
+						   ", h: " + boundingBox.height + "\n" +
+				"Anchor point x: " + anchor.x +
+						   ", y: " + anchor.y + "\n")
 		/* 
 			s.append("Points:\n")
 			for (Point curPoint : points) {
@@ -107,6 +114,8 @@ class Blob {
 			    "			<offset_y>" + (int) boundingBox.y + "</offset_y>\n" +
 				"			<width>" + (int) boundingBox.width + "</width>\n" +
 				"			<height>" + (int) boundingBox.height + "</height>\n" +
+				"			<anchor_x>" + (int) anchor.x + "</anchor_x>\n" +
+				"			<anchor_y>" + (int) anchor.y + "</anchor_y>\n" +
 				"		</sprite>\n")
 		return s.toString()
 	}

@@ -24,7 +24,7 @@ import blobdetection.BlobDetection
  * The user has two options to apply the Blob detection
  * algorithm on the sprite sheets:
  1. by manually selecting a target area from the sheet; or
- 2. by selecting the option â€œCut entire sheetâ€� from the â€œActionsâ€� menu.
+ 2. by selecting the option Cut entire sheet from the Actions menu.
  * Option 1 can be achieved if the user clicks and drags 
  * the mouse over the image. That way, the Blob detection
  * algorithm is only applied to that sprite sheet subset 
@@ -57,11 +57,13 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	 *  	width,
 	 *  	height.
 	 */
-	Rectangle selectionBox = new Rectangle(0, 0, 0, 0)
+	Rectangle selectionBox
 		// Start position on screen for the selection box
-		Point selectionStart = new Point()
+		Point selectionStart
 		// Release position on screen for the selection box
-		Point selectionEnd = new Point()
+		Point selectionEnd
+		// Anchor point for the selection box
+		Point anchorPoint
 
 	public SpritePanel() throws IOException {
 		//setBorder(javax.swing.BorderFactory.createTitledBorder("Sprite Sheet"))
@@ -80,31 +82,45 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 		
 		// Default XMLExporter
 		xml = new XMLExporter()
+		
+		// Init boxes and points
+		selectionBox = new Rectangle(0, 0, 0, 0)
+			selectionStart = new Point()
+			selectionEnd = new Point()
+			anchorPoint = new Point()
 	}
 
 	/*
 	 * Drawn box as user drags the mouse on screen.
 	 */
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		// Set location at mouse current position
-		selectionEnd.setLocation(e.getX(), e.getY())
-		// Quick-fix for mouse position outside image limits
-		if(selectionEnd.x < 0) selectionEnd.x = 0
-		if(selectionEnd.x > spritesheet.width) selectionEnd.x = spritesheet.width
-		if(selectionEnd.y < 0) selectionEnd.y = 0
-		if(selectionEnd.y > spritesheet.height) selectionEnd.y = spritesheet.height
-
-		// Defines box width and height
-		int  w = selectionStart.x - selectionEnd.x
-		int  h = selectionStart.y - selectionEnd.y
-		int x = w < 0 ? selectionStart.x : selectionEnd.x
-		int y = h < 0 ? selectionStart.y : selectionEnd.y
-		w = Math.abs( w )
-		h = Math.abs( h )
-
-		// Set box position x and y, width and height.
-		selectionBox.setBounds(x, y, w, h)
+	public void mouseDragged(MouseEvent e) {	
+		// Shift + drag : move anchor point
+		if(e.isShiftDown())
+		{
+			
+		}
+		else
+		{
+			// Set location at mouse current position
+			selectionEnd.setLocation(e.getX(), e.getY())
+			// Quick-fix for mouse position outside image limits
+			if(selectionEnd.x < 0) selectionEnd.x = 0
+			if(selectionEnd.x > spritesheet.width) selectionEnd.x = spritesheet.width
+			if(selectionEnd.y < 0) selectionEnd.y = 0
+			if(selectionEnd.y > spritesheet.height) selectionEnd.y = spritesheet.height
+	
+			// Defines box width and height
+			int  w = selectionStart.x - selectionEnd.x
+			int  h = selectionStart.y - selectionEnd.y
+			int x = w < 0 ? selectionStart.x : selectionEnd.x
+			int y = h < 0 ? selectionStart.y : selectionEnd.y
+			w = Math.abs( w )
+			h = Math.abs( h )
+	
+			// Set box position x and y, width and height.
+			selectionBox.setBounds(x, y, w, h)
+		}
 
 		// Repaint panel
 		repaint()
@@ -119,11 +135,20 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// Set location at mouse click
-		selectionStart.setLocation(e.getX(), e.getY())
-
-		// Clean SpriteSheet's previous blobs for new selection
-		blobDetection.clean()
+		// Shift + Click : place anchor point
+		if(e.isShiftDown())
+		{
+			
+		}
+		// Normal Click : draw box
+		else
+		{
+			// Set location at mouse click
+			selectionStart.setLocation(e.getX(), e.getY())
+	
+			// Clean SpriteSheet's previous blobs for new selection
+			blobDetection.clean()
+		}
 
 		// Repaint panel
 		repaint()
@@ -134,25 +159,49 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// Set location at mouse release
-		selectionEnd.setLocation(e.getX(), e.getY())
-		// Quick-fix for mouse position outside image limits
-		if(selectionEnd.x < 0) selectionEnd.x = 0
-		if(selectionEnd.x > spritesheet.width) selectionEnd.x = spritesheet.width
-		if(selectionEnd.y < 0) selectionEnd.y = 0
-		if(selectionEnd.y > spritesheet.height) selectionEnd.y = spritesheet.height
-
-		// Defines box width and height
-		int  w = selectionStart.x - selectionEnd.x;
-		int  h = selectionStart.y - selectionEnd.y;
-		int x = w < 0 ? selectionStart.x : selectionEnd.x;
-		int y = h < 0 ? selectionStart.y : selectionEnd.y;
-		w = Math.abs( w );
-		h = Math.abs( h );
-
-		// Set box position x and y, width and height.
-		selectionBox.setBounds(x, y, w, h)
-
+		
+		// Shift + Click : place anchor point
+		if(e.isShiftDown())
+		{
+			// Set anchor point at mouse click
+			anchorPoint.setLocation(e.getX(), e.getY())
+			
+			// Check if valid (inside a blob)
+			for(Blob s : blobDetection.getClips()){
+				Rectangle box = s.getBoundingBox()
+				// Check if point is inside this blob bounding box.
+				if(anchorPoint.x >= box.x && anchorPoint.x <= box.x+box.width
+					&& anchorPoint.y >= box.y && anchorPoint.y <= box.y+box.height)
+				{
+					// Set this blob anchor to point.
+					s.anchor.x = anchorPoint.x
+					s.anchor.y = anchorPoint.y
+					break;
+				}
+			}
+		}
+		else
+		{
+			// Set location at mouse release
+			selectionEnd.setLocation(e.getX(), e.getY())
+			// Quick-fix for mouse position outside image limits
+			if(selectionEnd.x < 0) selectionEnd.x = 0
+			if(selectionEnd.x > spritesheet.width) selectionEnd.x = spritesheet.width
+			if(selectionEnd.y < 0) selectionEnd.y = 0
+			if(selectionEnd.y > spritesheet.height) selectionEnd.y = spritesheet.height
+	
+			// Defines box width and height
+			int  w = selectionStart.x - selectionEnd.x;
+			int  h = selectionStart.y - selectionEnd.y;
+			int x = w < 0 ? selectionStart.x : selectionEnd.x;
+			int y = h < 0 ? selectionStart.y : selectionEnd.y;
+			w = Math.abs( w );
+			h = Math.abs( h );
+	
+			// Set box position x and y, width and height.
+			selectionBox.setBounds(x, y, w, h)
+		}
+		
 		// Repaint panel
 		repaint()
 	}
@@ -177,13 +226,25 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 
 		// Draw Box on Panel
 		g.drawRect((int) selectionBox.x, (int) selectionBox.y, (int) selectionBox.width, (int) selectionBox.height)
-
+		
 		// Draw SpriteClips (blobs) on Panel, if any
 		if(blobDetection.getClips() != null)
 		{
 			for(Blob s : blobDetection.getClips()){
+				
+				// Draw box
 				Rectangle d = s.getBoundingBox()
 				g.drawRect( (int) d.x, (int) d.y, (int) d.width, (int) d.height )
+				
+				// Draw anchor point
+				Point a = s.getAnchorPoint()
+				// Only draw if anchor isn't default (box x,y)
+				if(a.x != d.x || a.y != d.y)
+				{
+					g.drawRect( (int) a.x - 5, (int) a.y - 5, 10, 10 )
+					//g.drawLine(ABORT, ABORT, ABORT, ABORT)( (int) s.x, (int) s.y )
+					g.drawRect((int) a.x, (int) a.y, 1, 1) // Draw point quick-fix
+				}
 			}
 		}
 	}
@@ -204,6 +265,11 @@ class SpritePanel extends JPanel implements MouseListener, MouseMotionListener {
 
 		// Adjust Panel Size to new SpriteSheet size
 		setPreferredSize(new Dimension(spritesheet.width,spritesheet.height))
+		
+		selectionBox = new Rectangle(0, 0, 0, 0)
+		selectionStart = new Point()
+		selectionEnd = new Point()
+		anchorPoint = new Point()
 
 		// Repaint screen
 		repaint()

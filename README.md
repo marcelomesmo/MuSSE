@@ -17,6 +17,7 @@ Direct Link: https://www.dropbox.com/s/agvlzsptj39l8ox/MuSSE.jar?dl=0
   
  * HOW TO:  
  	1) Cut Selection (CTRL+S)  
+ 		1.1) Optional: Add Anchor Point (SHIFT+Click)  
  	2) Add Selection to Xml (CTRL+A) as a new set of Sprites (Animation)  
  	3) Export Xml (CTRL+X)  
  	4) Read Xml using parser  
@@ -26,7 +27,7 @@ Direct Link: https://www.dropbox.com/s/agvlzsptj39l8ox/MuSSE.jar?dl=0
 A Parser in C++ and Java (to read Musse's XML files) is available [here](https://github.com/marcelomesmo/MusseXmlParser).    
   	
  * TODO LIST:  
- 	a) Make a editable list of saved animations.  
+ 	a) Make a editable list of cropped sprites/animations.  
   
  * Authors’ contact:  
  https://marcelomesmo.github.io  

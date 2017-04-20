@@ -54,6 +54,12 @@ class BlobDetection {
 		public void findClips(SpriteSheet sheet, Rectangle area)
 		{
 			this.clips = getSpriteClips(sheet, area)
+			// Init clips anchor point
+			for(Blob b : clips)
+			{
+				b.anchor.x = b.x
+				b.anchor.y = b.y
+			}
 		}
 		/*
 		 * The overall goal of connected-component is to label each pixel within
