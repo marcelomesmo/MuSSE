@@ -13,7 +13,7 @@ Groovy adaptation.
 
  * JAR File at:  
 Dropbox: https://www.dropbox.com/home/ifrn-marcelo/projetos/musse  
-Direct Link: https://www.dropbox.com/s/agvlzsptj39l8ox/MuSSE.jar?dl=0  
+Direct Link: https://www.dropbox.com/s/bummz01sm2gfb6v/MuSSE.jar?dl=0  
   
  * HOW TO:  
  	1) Cut Selection (CTRL+S)  

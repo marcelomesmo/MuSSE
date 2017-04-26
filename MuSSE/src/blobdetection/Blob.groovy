@@ -114,8 +114,8 @@ class Blob {
 			    "			<offset_y>" + (int) boundingBox.y + "</offset_y>\n" +
 				"			<width>" + (int) boundingBox.width + "</width>\n" +
 				"			<height>" + (int) boundingBox.height + "</height>\n" +
-				"			<anchor_x>" + (int) anchor.x + "</anchor_x>\n" +
-				"			<anchor_y>" + (int) anchor.y + "</anchor_y>\n" +
+				"			<anchor_x>" + (int) (anchor.x - boundingBox.x) + "</anchor_x>\n" +
+				"			<anchor_y>" + (int) (anchor.y - boundingBox.y) + "</anchor_y>\n" +
 				"		</sprite>\n")
 		return s.toString()
 	}
