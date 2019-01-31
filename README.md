@@ -5,7 +5,9 @@ MuSSE (Multi-sized Sprite Sheet meta-data Exporter) is based on a Blob detection
 connected-component labeling system.  
 
  * More at:  
- http://www.sbgames.org/sbgames2015/anaispdf/computacao-full/147508.pdf
+ http://www.sbgames.org/sbgames2015/anaispdf/computacao-full/147508.pdf  
+ * Ever more at:  
+ https://pdfs.semanticscholar.org/9f78/4d991f5902c84c2181c6c573661abdc228b1.pdf  
   
 Welcome to MuSSE - Multi-sized Sprite Sheet meta-data Exporter.
 
