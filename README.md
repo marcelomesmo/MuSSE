@@ -4,9 +4,9 @@ MuSSE is a tool developed to extract XML data from sprite sheet images with non-
 MuSSE (Multi-sized Sprite Sheet meta-data Exporter) is based on a Blob detection algorithm that incorporates a 
 connected-component labeling system.  
 
- * More at:  
+ * More at (SBGames paper):  
  http://www.sbgames.org/sbgames2015/anaispdf/computacao-full/147508.pdf  
- * Ever more at:  
+ * Ever more at (JIS Paper):  
  https://pdfs.semanticscholar.org/9f78/4d991f5902c84c2181c6c573661abdc228b1.pdf  
   
 Welcome to MuSSE - Multi-sized Sprite Sheet meta-data Exporter.
